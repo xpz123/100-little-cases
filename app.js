@@ -48,3 +48,23 @@ modal.querySelector(".modal-backdrop").addEventListener("click", closeModal);
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
 
 renderCards();
+
+const musicBtn = document.getElementById("music-btn");
+const bgm = document.getElementById("bgm");
+
+function toggleMusic() {
+  if (bgm.paused) {
+    bgm.play().then(() => {
+      musicBtn.classList.add("playing");
+    }).catch(() => {
+      // 播放被浏览器拒绝（极少见，因由用户点击触发）；保持暂停状态
+    });
+  } else {
+    bgm.pause();
+    musicBtn.classList.remove("playing");
+  }
+}
+
+musicBtn.addEventListener("click", toggleMusic);
+bgm.addEventListener("pause", () => musicBtn.classList.remove("playing"));
+bgm.addEventListener("play", () => musicBtn.classList.add("playing"));
