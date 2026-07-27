@@ -12,7 +12,15 @@
     <p class="hero-sub">生活里那些小小的、忍不住想吐槽的瞬间 ♡</p>
   </header>
 
+  <nav id="filters" class="filters">
+    <button class="filter-btn is-active" data-range="all">全部</button>
+    <button class="filter-btn" data-range="day">最近 1 天</button>
+    <button class="filter-btn" data-range="week">最近 1 周</button>
+    <button class="filter-btn" data-range="month">最近 1 个月</button>
+  </nav>
+
   <main id="grid" class="grid"></main>
+  <p id="empty-tip" class="empty-tip" hidden>这段时间还没有烦恼的小事儿呢 ~ ✨</p>
 
   <div id="modal" class="modal" hidden>
     <div class="modal-backdrop"></div>
