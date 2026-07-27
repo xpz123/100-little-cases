@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>100件令人烦恼的小事儿</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="hero">
+    <h1 class="hero-title">100件令人烦恼的小事儿</h1>
+    <p class="hero-sub">生活里那些小小的、忍不住想吐槽的瞬间 ♡</p>
+  </header>
+
+  <main id="grid" class="grid"></main>
+
+  <div id="modal" class="modal" hidden>
+    <div class="modal-backdrop"></div>
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <button class="modal-close" aria-label="关闭">×</button>
+      <div class="modal-body"></div>
+    </div>
+  </div>
+
+  <button id="music-btn" class="music-btn" aria-label="播放/暂停背景音乐" title="背景音乐">♪</button>
+  <audio id="bgm" loop preload="auto"
+         src="演奏曲-【钢琴演奏】周杰伦与昆凌英国教堂婚礼的钢琴音乐.ogg"></audio>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
