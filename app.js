@@ -4,8 +4,14 @@ const modal = document.getElementById("modal");
 const modalBody = modal.querySelector(".modal-body");
 const emptyTip = document.getElementById("empty-tip");
 const filters = document.getElementById("filters");
+const pager = document.getElementById("pager");
+const prevBtn = document.getElementById("prev-page");
+const nextBtn = document.getElementById("next-page");
+const pageInfo = document.getElementById("page-info");
 
+const PAGE_SIZE = 5;
 let currentRange = "all";
+let currentPage = 1;
 
 function cardMedia(item, cls, placeholderCls) {
   if (item.image) {
@@ -33,7 +39,13 @@ function inRange(item, range) {
 
 function renderCards() {
   const list = CASES.filter((item) => inRange(item, currentRange));
-  grid.innerHTML = list.map((item) => `
+  const totalPages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+  if (currentPage > totalPages) currentPage = totalPages;
+
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const pageItems = list.slice(start, start + PAGE_SIZE);
+
+  grid.innerHTML = pageItems.map((item) => `
     <article class="card" data-id="${item.id}">
       ${cardMedia(item, "card-img", "card-placeholder")}
       <div class="card-body">
@@ -43,7 +55,24 @@ function renderCards() {
       </div>
     </article>
   `).join("");
+
   emptyTip.hidden = list.length > 0;
+  renderPager(list.length, totalPages);
+}
+
+function renderPager(total, totalPages) {
+  // 只有一页（或空）时不显示分页栏
+  pager.hidden = total <= PAGE_SIZE;
+  if (pager.hidden) return;
+  pageInfo.textContent = `第 ${currentPage} / ${totalPages} 页`;
+  prevBtn.disabled = currentPage <= 1;
+  nextBtn.disabled = currentPage >= totalPages;
+}
+
+function goToPage(page) {
+  currentPage = page;
+  renderCards();
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function openModal(item) {
@@ -76,9 +105,13 @@ filters.addEventListener("click", (e) => {
   const btn = e.target.closest(".filter-btn");
   if (!btn) return;
   currentRange = btn.dataset.range;
+  currentPage = 1;
   filters.querySelectorAll(".filter-btn").forEach((b) => b.classList.toggle("is-active", b === btn));
   renderCards();
 });
+
+prevBtn.addEventListener("click", () => { if (currentPage > 1) goToPage(currentPage - 1); });
+nextBtn.addEventListener("click", () => goToPage(currentPage + 1));
 
 renderCards();
 

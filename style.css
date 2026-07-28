@@ -67,6 +67,37 @@ body {
   padding: 40px 16px;
 }
 
+/* 分页栏 */
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 32px auto 0;
+}
+.pager[hidden] { display: none; }
+.pager-btn {
+  border: none;
+  background: linear-gradient(135deg, var(--pink-deep), var(--purple-deep));
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 9px 20px;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(179, 157, 219, 0.25);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.pager-btn:hover:not(:disabled) { transform: translateY(-2px); }
+.pager-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.page-info {
+  color: var(--purple-deep);
+  font-size: 14px;
+  font-weight: 700;
+  min-width: 90px;
+  text-align: center;
+}
+
 /* 瀑布流：CSS columns，多列自动填充 */
 .grid {
   column-count: 4;
