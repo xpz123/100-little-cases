@@ -3,4 +3,5 @@
 // date 填生成日期，格式 "YYYY-MM-DD"（用于展示和时间过滤）。
 const CASES = [
   { id: 1, title: "洗衣机的滚筒好脏好脏", desc: "明明没用几次呢", image: "配图/洗衣机脏了.png", date: "2026-07-27" },
+  { id: 2, title: "刚要工作，电脑居然坏了", desc: "看来今天不宜工作啦嘻嘻嘻", image: "配图/卡通独角兽看电脑error.png", date: "2026-07-28" },
 ];
