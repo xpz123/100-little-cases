@@ -25,7 +25,8 @@
    ```
    - `image` 留空 `""` 则显示可爱占位图（🥲）。
    - `date` 填生成日期，格式 `"YYYY-MM-DD"`，用于卡片上的日期徽章展示和顶部的时间过滤（全部/最近1天/最近1周/最近1个月）。
-3. 提交（见下方，务必按流程走）。
+3. 提交更新网站（见下方，务必按流程走）。
+4. **同步发一条小红书帖子**（见下方「同步发布小红书」）。
 
 ## ⚠️ 提交前必须先压缩图片（重要）
 
@@ -66,3 +67,44 @@ python3 -m http.server 8000
 # 浏览器打开 http://localhost:8000
 ```
 （背景音乐因浏览器策略需通过 http 服务器打开，直接双击 index.html 音乐可能无法播放。）
+
+## 同步发布小红书
+
+每新增一条 item 并更新网站后，用同一条 item 的 `title` / `desc` / 配图，同步发一条小红书帖子。
+
+使用已安装的 **xiaohongshu-skills**（位于 `~/.claude/skills/xiaohongshu-skills`，通过 Chrome 扩展 + 真实账号操作）。
+
+**内容映射规则：**
+- 标题 = item 的 `title`（≤ 20 单位：汉字/全角计 1，英文数字每 2 个计 1；超长则重新创作到约 20）。
+- 正文 = item 的 `desc`，末尾另起一行加固定话题标签：
+  `#生活碎片 #烦恼小事 #可爱插画 #独角兽` +（可按内容补 1 个贴切标签，如打工人日常）。
+- 配图 = item 的 `image` 对应的**绝对路径**（如 `/Users/tal/work/100_little_cases/配图/xxx.png`）。压缩后的图即可，无需额外处理。
+
+**发布步骤（务必分步 + 用户确认）：**
+
+```bash
+# 0. 前置：确保 bridge server 在跑（扩展需已装并启用、Chrome 已登录小红书）
+cd ~/.claude/skills/xiaohongshu-skills
+pgrep -f bridge_server.py >/dev/null || nohup uv run python scripts/bridge_server.py > /tmp/xhs_bridge.log 2>&1 &
+sleep 4
+uv run python scripts/cli.py check-login      # 期望 {"logged_in": true}
+
+# 1. 把标题、正文写入 UTF-8 临时文件（不要在命令行内联中文）
+#    /tmp/xhs_title.txt  /tmp/xhs_content.txt
+
+# 2. 填表单（不发布），停在发布页供预览
+uv run python scripts/cli.py fill-publish \
+  --title-file /tmp/xhs_title.txt \
+  --content-file /tmp/xhs_content.txt \
+  --images "/Users/tal/work/100_little_cases/配图/xxx.png"
+
+# 3. 用 AskUserQuestion 让用户在 Chrome 里确认预览后，再发布：
+uv run python scripts/cli.py click-publish
+```
+
+**注意事项：**
+- **必须分步 + 用户确认后再 `click-publish`**，不要一步 `publish` 直接发。
+- **控制频率**：多条时每条间隔约 1 分钟以上，避免触发风控。
+- `click-publish` 有时会打 warning「未捕获到发布反馈」，通常仍已发布成功；让用户到小红书确认。
+- 若 bridge 连接卡住无输出：多半是 bridge server 没常驻，按步骤 0 手动 `nohup` 启动即可。
+- 发布是公开、真实账号、难撤回的操作，务必先确认再发。
